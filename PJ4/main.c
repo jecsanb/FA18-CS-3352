@@ -29,8 +29,7 @@ void printLn(char *str) {
 
 
 int countDigit(int n) {
-    if (n < 0) n = abs(n);
-    return (int) (floor(log10(n))) + 1;
+    return (n) ? (int)((floor(log10(n))) + 1) : 1;
 }
 
 /**

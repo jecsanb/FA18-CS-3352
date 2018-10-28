@@ -9,8 +9,6 @@
 #
 #
 #
-test:   a.out
-	./tests.sh
 a.out:  main.c
 	gcc main.c
 run: a.out
