@@ -14,7 +14,7 @@ a.out:  main.c
 run: a.out
 	./a.out
 clean:
-	rm -rf ./a.out  *.log
+	rm -rf ./a.out  *.log ./a.out.dSYM 
 
 # vim:ft=make
 #
