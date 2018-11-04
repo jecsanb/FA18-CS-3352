@@ -9,6 +9,9 @@
 #include <string.h>
 #include <assert.h>
 #include <math.h>
+#define SPACE  0x20
+#define NL   0x0A
+
 
 int countDigit(int n);
 
@@ -98,34 +101,40 @@ int strToInt(char *str) {
  * Asks for two integers separated by a space to be added.
  */
 int main(int argc, char *argv[]) {
-    char *input, *a, *b, *output;
-    int inputAllocated = 0;
-    const char *delimiter = " ";
+    char *input_a = NULL, *input_b = NULL;
+    char *output = NULL, *has_space = NULL;
+    int input_allocated = 0;
     int result;
-    size_t buffer_size = (sizeof(char)*255);
+    size_t buffer_size = (sizeof(char) * 255);
 
     printLn("Enter two numbers on one line separated by a space.");
     if (argc >= 2) {
         // support for command line arguments in string format.
-        input = argv[1];
-        printLn(input);
+        input_a = argv[1];
+        printLn(input_a);
 
     } else {
-        inputAllocated = 1;
-        input = (char *) malloc(buffer_size);
-        read(1, input, (size_t) 256);
-        assert(input != NULL);
+        input_allocated = 1;
+        input_a = (char *) malloc(buffer_size);
+        read(1, input_a, buffer_size);
+        has_space = strchr(input_a,SPACE);
+        if (has_space) {
+            while(*has_space == SPACE){
+               *has_space = 0;
+               ++has_space;
+            }
+            input_b = has_space;
+        }else{
+            input_b = (char *) malloc(buffer_size);
+            read(1, input_b ,buffer_size);
+
+        }
+        input_a[strcspn(input_a,"\n")] = 0;
+        input_b[strcspn(input_b,"\n")] = 0;
     };
 
-
-    //first number and second numbers
-    a = strsep(&input, delimiter);
-    b = input;
-    //removes the newline
-    b[strcspn(b, "\n")] = 0;
-
     //do the thing
-    result = strToInt(a) + strToInt(b);
+    result = strToInt(input_a) + strToInt(input_b);
     //printf("Result of sum: %d",result);
     output = intToStr(result);
     //printf("Output:%s\n",output);
@@ -133,6 +142,6 @@ int main(int argc, char *argv[]) {
     printLn(output);
     //Land of the
     free(output);
-    if (inputAllocated) free(a);
+    if (input_allocated) free(input_a);
     return 0;
 }
