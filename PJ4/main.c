@@ -9,6 +9,7 @@
 #include <string.h>
 #include <assert.h>
 #include <math.h>
+
 #define SPACE  0x20
 #define NL   0x0A
 
@@ -107,7 +108,7 @@ int main(int argc, char *argv[]) {
     int result;
     size_t buffer_size = (sizeof(char) * 255);
 
-    printLn("Enter two numbers on one line separated by a space.");
+    printLn("Enter two numbers on one line separated by a space or");
     if (argc >= 2) {
         // support for command line arguments in string format.
         input_a = argv[1];
@@ -117,31 +118,36 @@ int main(int argc, char *argv[]) {
         input_allocated = 1;
         input_a = (char *) malloc(buffer_size);
         read(1, input_a, buffer_size);
-        has_space = strchr(input_a,SPACE);
-        if (has_space) {
-            while(*has_space == SPACE){
-               *has_space = 0;
-               ++has_space;
-            }
-            input_b = has_space;
-        }else{
-            input_b = (char *) malloc(buffer_size);
-            read(1, input_b ,buffer_size);
-
+    }
+    has_space = strchr(input_a, SPACE);
+    if (has_space) {
+        while (*has_space == SPACE) {
+            *has_space = 0;
+            ++has_space;
         }
-        input_a[strcspn(input_a,"\n")] = 0;
-        input_b[strcspn(input_b,"\n")] = 0;
-    };
+        input_b = has_space;
+    } else {
+        ++input_allocated;
+        input_b = (char *) malloc(buffer_size);
+        read(1, input_b, buffer_size);
 
-    //do the thing
+    }
+    input_a[strcspn(input_a, "\n")] = 0;
+    input_b[strcspn(input_b, "\n")] = 0;
+
+    //do the thing (manually?)
     result = strToInt(input_a) + strToInt(input_b);
     //printf("Result of sum: %d",result);
     output = intToStr(result);
     //printf("Output:%s\n",output);
     print("Sum of the two numbers you entered = ");
     printLn(output);
-    //Land of the
+    // ((freedom intensifies)
     free(output);
-    if (input_allocated) free(input_a);
+    if (input_allocated){
+        free(input_a);
+        if(input_allocated > 1)
+            free(input_b);
+    }
     return 0;
 }
