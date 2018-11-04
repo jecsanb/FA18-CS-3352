@@ -17,19 +17,22 @@ int charToInt(char c);
 int strToInt(char *str);
 
 void printLn(char *str);
+
 void print(char *str);
 
-void print(char *str){
-    write(1, str, strlen(str)* sizeof(char));
+void print(char *str) {
+    write(1, str, strlen(str) * sizeof(char));
 }
+
 void printLn(char *str) {
-    write(1, str, strlen(str)* sizeof(char));
+    write(1, str, strlen(str) * sizeof(char));
     write(1, "\n", sizeof(char));
 }
 
 
 int countDigit(int n) {
-    return (n) ? (int)((floor(log10(n))) + 1) : 1;
+    n = abs(n);
+    return (n) ? (int) ((floor(log10(n))) + 1) : 1;
 }
 
 /**
@@ -60,7 +63,7 @@ char *intToStr(int num) {
         string[i] = intToChar(v);
         num /= 10;
     }
-    string[charsNeeded- 1] = 0;
+    string[charsNeeded - 1] = 0;
     return string;
 }
 
@@ -97,20 +100,19 @@ int strToInt(char *str) {
 int main(int argc, char *argv[]) {
     char *input, *a, *b, *output;
     int inputAllocated = 0;
-    const char* delimiter = " ";
+    const char *delimiter = " ";
     int result;
-    int buffer_size;
-    buffer_size = 255;
+    size_t buffer_size = (sizeof(char)*255);
 
     printLn("Enter two numbers on one line separated by a space.");
-    if(argc >= 2){
+    if (argc >= 2) {
         // support for command line arguments in string format.
         input = argv[1];
         printLn(input);
 
-    }else{
+    } else {
         inputAllocated = 1;
-        input = (char *) malloc(buffer_size * sizeof(char));
+        input = (char *) malloc(buffer_size);
         read(1, input, (size_t) 256);
         assert(input != NULL);
     };
@@ -131,6 +133,6 @@ int main(int argc, char *argv[]) {
     printLn(output);
     //Land of the
     free(output);
-    if(inputAllocated) free(a);
+    if (inputAllocated) free(a);
     return 0;
 }
