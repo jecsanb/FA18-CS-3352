@@ -10,7 +10,11 @@
  * Programming Assignment #06
  **/
 
-enum Hand {
+enum Winner {
+    true = 1,
+    false = 0
+};
+enum Draw {
     rock = 0,
     paper = 1,
     scissors = 2,
@@ -18,42 +22,43 @@ enum Hand {
 };
 struct Player {
     char *name;
-    enum Hand played;
-    int winner;
+    enum Draw played;
+    enum Winner won;
+    enum Winner draw;
 };
 
-void draw(struct Player *player) {
+void play(struct Player *player) {
     player->played = rand() % 3;      // Returns a pseudo-random integer between 0 and RAND_MAX.
 
-    char *hands[1][4] = {"Rock", "Paper", "Scissors"};
-    printf("Player %s, used %s \n", player->name, hands[0][player->played]);
 
 }
 
-void play(struct Player *player1, struct Player *player2) {
-    player1->winner = 0;
-    player2->winner = 0;
-    struct Player draw = {"draw", none, 1};
+void score(struct Player *player1, struct Player *player2) {
+    struct Player draw = {"play", none, false, true};
+    char *hands[1][3] = {"Rock",
+                         "Paper",
+                         "Scissors"};
+
     struct Player *results[3][3] = {
             {&draw,   player2, player1},
             {player1, &draw,   player2},
             {player2, player1, &draw}
     };
-    (results[player1->played][player2->played])->winner = 1;
+    (results[player1->played][player2->played])->won = true;
+
+    printf("Player %s: %s V.S Player %s: %s\n", player1->name, hands[0][player1->played],
+           player2->name, hands[0][player2->played]);
 
 }
 
 int main(int argc, char **argv) {
     srand(time(NULL));   // Initialization, should only be called once.
-    struct Player p1 = {"p1", none, 0};
-    struct Player p2 = {"p2", none, 0};
-    //pthread_p1
-    //pthread_p2
-    while (p1.winner == p2.winner) {
-        draw(&p1);
-        draw(&p2);
-        play(&p1, &p2);
+    struct Player p1 = {"one", none, 0}, p2 = {"two", none, 0};
+    while (p1.won == p2.won) {
+        play(&p1);
+        play(&p2);
+        score(&p1, &p2);
     }
-    printf("Winner is %s", (p1.winner > p2.winner ? p1.name : p2.name));
+    printf("Winner is player %s\n", (p1.won ? p1.name : p2.name));
     return 0;
 }
