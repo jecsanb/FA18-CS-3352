@@ -1,5 +1,6 @@
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /**
  * Jecsan Blanco
@@ -25,6 +26,7 @@ struct SumNums {
 void *max(void *vals) {
     struct SumNums *nums = (struct SumNums *) vals;
     nums->max = (nums->a > nums->b) ? nums->a : nums->b;
+    return  NULL;
 }
 
 /* this function is run by the first thread
@@ -36,12 +38,20 @@ void *sum(void *vals) {
     return NULL;
 }
 
-int main() {
+int main(int argc, char **argv) {
     int input[3];
-    printf("Enter the first number: ");
-    scanf("%d", &input[0]);
-    printf("Enter the second number: ");
-    scanf("%d", &input[1]);
+    if (argc < 2) {
+
+        printf("Enter the first number: ");
+        scanf("%d", &input[0]);
+
+        printf("Enter the second number: ");
+        scanf("%d", &input[1]);
+    } else {
+        char *ptr;
+        input[0] = (int) strtol(argv[1], &ptr, 10);
+        input[1] = (int) strtol(argv[2], &ptr, 10);
+    }
 
     struct SumNums num = {input[0], input[1], 0};
     pthread_t sum_x_y_thread;
